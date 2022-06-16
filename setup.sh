@@ -138,5 +138,3 @@ aws ec2 --region $REGION run-instances --instance-type g4dn.2xlarge --network-in
 # Issue the command below to create your bastion host
 aws ec2 --region $REGION run-instances --instance-type t3.medium --associate-public-ip-address --subnet-id $BASTION_SUBNET_ID --image-id $BASTION_IMAGE_ID --security-group-ids $BASTION_SG_ID --key-name $KEY_NAME
 
-# -------------------------- Configure the bastion host / web server --------------------------
-
