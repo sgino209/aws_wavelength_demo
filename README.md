@@ -1,8 +1,17 @@
 # alef8_poc
 
-Reference:    
-https://aws.amazon.com/blogs/compute/deploying-your-first-5g-enabled-application-with-aws-wavelength    
+References:   
+1. https://cloud-images.ubuntu.com/locator
+2. https://noise.getoto.net/tag/aws-wavelength
+3. https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+4. https://docs.aws.amazon.com/wavelength/latest/developerguide/wavelength-quotas.html
+5. https://aws.amazon.com/blogs/compute/deploying-your-first-5g-enabled-application-with-aws-wavelength   
     
+## Prerequisites:
+- Generate a new EC2 machine to run the below from
+- SSH to the machine, clone the Git repo, Install AWS CLI, prepare AWS credentials (~/.aws/credentials, see ref3) and a local .env file
+- The setup flow is tuned for us-west-2 region. Changing for a different region shall incorporate update of WL_ZONE and NGB (see ref4) and the IMAGE_IDs (see ref1)
+     
 ## Setup    
 Automatically handled by setup.sh, namely:    
 - Create the VPC and associated resources
