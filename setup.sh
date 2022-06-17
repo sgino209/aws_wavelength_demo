@@ -126,6 +126,10 @@ aws ec2 --region $REGION associate-address --allocation-id $API_CIP_ALLOC_ID --n
 
 # -------------------------- Deploy the API and inference instances ---------------------------
 
+# Create a key pair:
+aws ec2 create-key-pair --key-name $KEY_NAME --key-type rsa --key-format pem --query "KeyMaterial" --output text > $KEY_NAME.pem
+chmod 400 aws-alef.pem
+
 # Deploy the API instance (t3.medium, Ubuntu 18.04 AMI):
 aws ec2 --region $REGION run-instances --instance-type t3.medium --network-interface '[{"DeviceIndex":0,"NetworkInterfaceId":"'$API_ENI_ID'"}]' --image-id $API_IMAGE_ID --key-name $KEY_NAME
 
