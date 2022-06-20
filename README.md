@@ -3,14 +3,15 @@
 References:   
 1. https://cloud-images.ubuntu.com/locator
 2. https://noise.getoto.net/tag/aws-wavelength
-3. https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
-4. https://docs.aws.amazon.com/wavelength/latest/developerguide/wavelength-quotas.html
-5. https://aws.amazon.com/blogs/compute/deploying-your-first-5g-enabled-application-with-aws-wavelength   
+3. https://github.com/mikegcoleman/react-wavelength-inference-demo
+4. https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+5. https://docs.aws.amazon.com/wavelength/latest/developerguide/wavelength-quotas.html
+6. https://aws.amazon.com/blogs/compute/deploying-your-first-5g-enabled-application-with-aws-wavelength   
     
 ## Prerequisites:
 - Generate a new EC2 machine (t2.micro) in the same target region to run the below from
-- SSH to the machine, clone the Git repo, Install AWS CLI, prepare AWS credentials (~/.aws/credentials, see ref3) and a local .env file
-- The setup flow is tuned for us-west-2 region. Changing for a different region shall incorporate update of WL_ZONE and NGB (see ref4) and the IMAGE_IDs (see ref1)
+- SSH to the machine, clone the Git repo, Install AWS CLI, prepare AWS credentials (~/.aws/credentials, see ref4) and a local .env file
+- The setup flow is tuned for us-west-2 region. Changing for a different region shall incorporate update of WL_ZONE and NGB (see ref5) and the IMAGE_IDs (see ref1)
      
 ## Setup    
 Automatically handled by setup.sh, namely:    
@@ -22,28 +23,78 @@ Automatically handled by setup.sh, namely:
 - Deploy the bastion / web server
     
 ## Configure the bastion host/web server    
-SSH into the bastion host:    
+SSH into the bastion host (from the general_vm):    
 ```
-ssh -i /path/to/key.pem -A bitnami@<bastion ip address>
+ssh -i /path/to/key.pem ubuntu@<bastion ip address>
 ```
-Then clone, ramp-up and the delpoy the react webapp:    
+e.g.:
 ```
+ssh -i aws-alef8.pem ubuntu@54.200.130.4 
+```
+Then init, clone, ramp-up and the delpoy the react webapp:    
+```
+sudo apt update
+sudo apt install nodejs npm nginx
 git clone https://github.com/mikegcoleman/react-wavelength-inference-demo.git
-cd react-wavelength-inference-demo && npm install
+cd react-wavelength-inference-demo
+sudo npm install
 npm run build
-cp -r ./build/* /home/bitnami/htdocs
 ```
-Test that the web app is running correctly by navigating to the public IP address of your bastion instance    
+Note: If npm install fails with error, then try:   
+```
+cd /usr/local/lib
+sudo npm install -g npm@5.3
+cd -
+sudo npm install
+```
+And setup the following server in /etc/nginx/sites-enabled/default (override the default server):
+```
+server {
+   listen         80 default_server;
+   listen         [::]:80 default_server;
+   server_name    localhost;
+   root           /usr/share/nginx/html;
+location / {
+       proxy_pass http://127.0.0.1:3000;
+       proxy_http_version 1.1;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+   }
+}
+```
+Then start NginX:    
+```
+sudo service nginx restart
+```
+Verify it's working with:    
+```
+systemctl status nginx.service
+```
+Run the app, and keep this SSH terminal open (later on, can it's possible to run it as a systemctl service):    
+```
+npm start
+```
+Test that the web app is running correctly by navigating to the public IP address of your bastion instance (https://34.219.65.244)    
     
 ## Configure the inference server    
-SSH into the bastion host:    
+SSH into the bastion host (from the general_vm):    
 ```
-ssh -i /path/to/key.pem -A bitnami@<bastion public ip>
-
+ssh -i /path/to/key.pem -A ubuntu@<bastion ip address>
+```
+e.g.:    
+```
+ssh -i aws-alef8.pem -A ubuntu@54.200.130.4 
 ```
 Then SSH into the inference server instance:    
 ```
 ssh ubuntu@<inference server private ip>
+```
+e.g.:
+```
+ssh ubuntu@10.0.0.11
+
 ```
 Initialize the inference environment:     
 ```
