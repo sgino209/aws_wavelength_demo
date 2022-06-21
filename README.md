@@ -107,7 +107,7 @@ Then SSH into the inference server instance, with its private IP (connect_to_inf
 ssh ubuntu@10.0.0.11
 ```
 ### First time setup
-Initialize the inference environment:     
+Initialize the inference environment (make sure the EC2 machine has enough storage, 100GB+):     
 ```
 sudo apt-get update -y 
 sudo apt-get install -y virtualenv openjdk-11-jdk gcc python3-dev
@@ -116,7 +116,7 @@ mkdir inference && cd inference
 virtualenv --python=python3 inference
 source inference/bin/activate
 
-pip install torch torchtext torchvision sentencepiece psutil future wheel requests torchserve torch-model-archiver
+pip install torch torchtext torchvision sentencepiece psutil future wheel requests torchserve torch-model-archiver captum
 
 mkdir torchserve-examples
 cd torchserve-examples
