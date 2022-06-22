@@ -28,6 +28,30 @@ Automatically handled by setup.sh, namely:
 - Note: If using a Mac, please add the PEM keys to the keychain, e.g. ssh-add -K aws-alef8.pem   
    
 ---  
+     
+## Quick-Start (demo)
+### Terminal1 (Bastion)
+```
+connect_to_vm.sh
+connect_to_bastion.sh
+launch_bastion.sh
+```
+### Terminal2 (Inference server)
+```
+connect_to_vm.sh
+connect_to_bastion.sh
+connect_to_inference_server.sh
+launch_inference_server.sh
+```
+### Terminal3 (API server)
+```
+connect_to_vm.sh
+connect_to_bastion.sh
+inference_test.sh
+launch_api_server.sh
+```
+   
+---  
     
 ## Bastion host/web server    
 SSH into the general-purpose EC2 machine with agent forwarding enabled (connect_to_vm.sh):
