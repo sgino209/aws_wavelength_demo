@@ -1,4 +1,4 @@
-# alef8_poc
+# AWS Wavelength Demo
     
 ## References:   
 1. https://cloud-images.ubuntu.com/locator
