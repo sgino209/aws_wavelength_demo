@@ -1,4 +1,6 @@
 # AWS Wavelength Demo
+       
+![diagram](https://i.ibb.co/bR05hyS/Screen-Shot-2022-06-26-at-14-14-17.png)
     
 ## References:   
 1. https://cloud-images.ubuntu.com/locator
